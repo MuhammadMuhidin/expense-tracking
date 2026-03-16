@@ -269,7 +269,6 @@ const page={
 const card={
   width:"100%",
   maxWidth:720,
-  height:"100%",
   background:"white",
   padding:"16px",
   borderRadius:10,
@@ -277,11 +276,12 @@ const card={
   boxSizing:"border-box",
   display:"flex",
   flexDirection:"column",
-  overflow:"hidden"
+  maxHeight:"100%",
+  overflow:"auto"
 }
 
 const cardInput={
-  height:"100%"
+  height:"fit-content"
 }
 
 const cardHistory={
@@ -292,15 +292,13 @@ const header={
   display:"flex",
   justifyContent:"space-between",
   alignItems:"center",
-  marginBottom:16,
-  flexShrink:0
+  marginBottom:16
 }
 
 const tabs={
   display:"flex",
   gap:10,
-  marginBottom:16,
-  flexShrink:0
+  marginBottom:16
 }
 
 const tabBtn={
@@ -322,8 +320,7 @@ const activeTab={
 
 const formStyle={
   display:"grid",
-  gap:12,
-  overflow:"auto"
+  gap:12
 }
 
 const input={
@@ -345,8 +342,7 @@ const saveBtn={
 const historyWrapper={
   flex:1,
   display:"flex",
-  flexDirection:"column",
-  overflow:"hidden"
+  flexDirection:"column"
 }
 
 const tableScroll={
