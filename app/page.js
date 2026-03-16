@@ -209,8 +209,9 @@ export default function Page(){
               <option value="food">Food</option>
               <option value="drink">Drink</option>
               <option value="utilities">Utilities</option>
-              <option value="transport">Transport</option>
               <option value="shopping">Shopping</option>
+              <option value="billing">Billing</option>
+              <option value="installment">Installment</option>
               <option value="other">Other</option>
             </select>
 
@@ -222,8 +223,9 @@ export default function Page(){
               <option value="" disabled hidden>
                 Source of funds
               </option>
-              <option value="cash">Cash</option>
-              <option value="transfer">Transfer</option>
+              <option value="cash">BCA</option>
+              <option value="transfer">Krom</option>
+              <option value="transfer">Shopeepay</option>
               <option value="other">Other</option>
             </select>
 
