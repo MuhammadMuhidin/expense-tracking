@@ -23,7 +23,7 @@ export default function Page(){
     amount:"",
     category:"category",
     source:"source of funds",
-    date:""
+    date:"transaction date"
   }
 
   const [form,setForm] = useState(emptyForm)
