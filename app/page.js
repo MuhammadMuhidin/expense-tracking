@@ -95,13 +95,14 @@ export default function Page(){
 
     <div style={page}>
 
-      <div style={container}>
+      <div style={{
+        ...card,
+        ...(tab==="history" ? cardHistory : cardInput)
+      }}>
 
         <div style={header}>
-          <div>
-            <h2 style={title}>Expense Tracker</h2>
-            <div style={userText}>{user}</div>
-          </div>
+          <h2 style={{margin:0}}>Expense Tracker</h2>
+          <div style={{color:"#64748b"}}>{user}</div>
         </div>
 
         <div style={tabs}>
@@ -175,7 +176,7 @@ export default function Page(){
             />
 
             <button disabled={saving} style={saveBtn}>
-              {saving ? "Saving..." : "Save"}
+              {saving ? "Saving..." : "Simpan"}
             </button>
 
           </form>
@@ -184,28 +185,28 @@ export default function Page(){
 
         {tab==="history" && (
 
-          <div style={historyContainer}>
-
-            <div style={historyHeader}>
-
-              <div style={filterBox}>
-                <span>Month</span>
-
-                <input
-                  type="month"
-                  value={month}
-                  onChange={e=>setMonth(e.target.value)}
-                  style={monthInput}
-                />
-              </div>
-
-              <div style={totalText}>
-                Total Rp {total.toLocaleString()}
-              </div>
-
-            </div>
+          <div style={historyWrapper}>
 
             <div style={tableScroll}>
+
+              <div style={historyHeader}>
+
+                <div style={filterBox}>
+                  <div>Filter bulan</div>
+
+                  <input
+                    type="month"
+                    value={month}
+                    onChange={e=>setMonth(e.target.value)}
+                    style={input}
+                  />
+                </div>
+
+                <div style={summaryCard}>
+                  Total : Rp {total.toLocaleString()}
+                </div>
+
+              </div>
 
               {loading && (
                 <div style={loadingStyle}>Loading...</div>
@@ -256,28 +257,40 @@ export default function Page(){
 }
 
 const page={
-  minHeight:"100vh",
-  background:"#f8fafc",
+  height:"100vh",
+  background:"#f1f5f9",
   display:"flex",
-  justifyContent:"center"
+  justifyContent:"center",
+  padding:"16px",
+  boxSizing:"border-box",
+  overflow:"hidden"
 }
 
-const container={
+const card={
   width:"100%",
   maxWidth:720,
-  padding:"20px"
+  background:"white",
+  padding:"20px",
+  borderRadius:12,
+  boxShadow:"0 10px 30px rgba(0,0,0,0.08)",
+  boxSizing:"border-box",
+  display:"flex",
+  flexDirection:"column"
+}
+
+const cardInput={
+  height:"auto"
+}
+
+const cardHistory={
+  height:"100%"
 }
 
 const header={
+  display:"flex",
+  justifyContent:"space-between",
+  alignItems:"center",
   marginBottom:20
-}
-
-const title={
-  margin:0
-}
-
-const userText={
-  color:"#64748b"
 }
 
 const tabs={
@@ -288,17 +301,19 @@ const tabs={
 
 const tabBtn={
   padding:"8px 16px",
-  border:"1px solid #e2e8f0",
-  background:"white",
-  borderRadius:6
+  border:"none",
+  borderRadius:6,
+  background:"#e2e8f0",
+  cursor:"pointer"
 }
 
 const activeTab={
   padding:"8px 16px",
-  border:"1px solid #2563eb",
+  border:"none",
+  borderRadius:6,
   background:"#2563eb",
   color:"white",
-  borderRadius:6
+  cursor:"pointer"
 }
 
 const formStyle={
@@ -310,7 +325,8 @@ const input={
   width:"100%",
   padding:"10px",
   border:"1px solid #e2e8f0",
-  borderRadius:6
+  borderRadius:6,
+  boxSizing:"border-box"
 }
 
 const saveBtn={
@@ -321,49 +337,55 @@ const saveBtn={
   borderRadius:6
 }
 
-const historyContainer={
+const historyWrapper={
+  flex:1,
   display:"flex",
-  flexDirection:"column",
-  height:"75vh"
+  flexDirection:"column"
+}
+
+const tableScroll={
+  flex:1,
+  overflow:"auto",
+  border:"1px solid #e2e8f0",
+  borderRadius:8,
+  position:"relative"
 }
 
 const historyHeader={
-  display:"flex",
-  justifyContent:"space-between",
-  alignItems:"center",
-  marginBottom:10
+  position:"sticky",
+  top:0,
+  zIndex:2,
+  background:"white",
+  padding:"10px",
+  boxShadow:"0 2px 6px rgba(0,0,0,0.05)"
 }
 
 const filterBox={
   display:"flex",
   gap:10,
-  alignItems:"center"
+  alignItems:"center",
+  flexWrap:"wrap"
 }
 
-const monthInput={
-  padding:"6px",
-  border:"1px solid #e2e8f0",
-  borderRadius:6
-}
-
-const totalText={
-  fontWeight:600
-}
-
-const tableScroll={
-  flex:1,
-  overflow:"auto"
+const summaryCard={
+  background:"#2563eb",
+  color:"white",
+  padding:12,
+  borderRadius:8,
+  fontWeight:600,
+  marginTop:10
 }
 
 const table={
   width:"100%",
-  borderCollapse:"collapse"
+  borderCollapse:"collapse",
+  minWidth:600
 }
 
 const th={
   textAlign:"left",
   padding:"10px",
-  borderBottom:"1px solid #e2e8f0"
+  background:"#f1f5f9"
 }
 
 const td={
@@ -371,9 +393,10 @@ const td={
 }
 
 const tr={
-  borderBottom:"1px solid #f1f5f9"
+  borderTop:"1px solid #e2e8f0"
 }
 
 const loadingStyle={
-  padding:20
-                }
+  padding:20,
+  textAlign:"center"
+}
