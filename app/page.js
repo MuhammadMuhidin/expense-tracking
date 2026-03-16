@@ -80,10 +80,12 @@ export default function Page(){
     loadData(user)
   }
 
-  const filteredData = data.filter(r=>{
-    if(!r.date) return false
-    return r.date.startsWith(month)
-  })
+  const filteredData = data
+    .filter(r=>{
+      if(!r.date) return false
+      return r.date.startsWith(month)
+    })
+    .sort((a,b)=> new Date(b.date) - new Date(a.date))
 
   const total = filteredData.reduce((sum,r)=>{
     return sum + Number(r.amount)
@@ -180,25 +182,25 @@ export default function Page(){
 
         {tab==="history" && (
 
-          <div>
+          <div style={historyWrapper}>
 
-            <div style={filterBox}>
+            <div style={historyHeader}>
 
-              <div>
-                Filter bulan
+              <div style={filterBox}>
+                <div>Filter bulan</div>
+
+                <input
+                  type="month"
+                  value={month}
+                  onChange={e=>setMonth(e.target.value)}
+                  style={input}
+                />
               </div>
 
-              <input
-                type="month"
-                value={month}
-                onChange={e=>setMonth(e.target.value)}
-                style={input}
-              />
+              <div style={summaryCard}>
+                Total : Rp {total.toLocaleString()}
+              </div>
 
-            </div>
-
-            <div style={summaryCard}>
-              Total : Rp {total.toLocaleString()}
             </div>
 
             {loading && (
@@ -207,7 +209,7 @@ export default function Page(){
 
             {!loading && (
 
-              <div style={{overflowX:"auto"}}>
+              <div style={tableScroll}>
 
                 <table style={table}>
 
@@ -257,7 +259,8 @@ const page={
   display:"flex",
   justifyContent:"center",
   padding:"16px",
-  boxSizing:"border-box"
+  boxSizing:"border-box",
+  overflow:"hidden"
 }
 
 const card={
@@ -267,7 +270,9 @@ const card={
   padding:"20px",
   borderRadius:12,
   boxShadow:"0 10px 30px rgba(0,0,0,0.08)",
-  boxSizing:"border-box"
+  boxSizing:"border-box",
+  display:"flex",
+  flexDirection:"column"
 }
 
 const header={
@@ -280,8 +285,7 @@ const header={
 const tabs={
   display:"flex",
   gap:10,
-  marginBottom:20,
-  flexWrap:"wrap"
+  marginBottom:20
 }
 
 const tabBtn={
@@ -319,15 +323,29 @@ const saveBtn={
   background:"#2563eb",
   color:"white",
   border:"none",
-  borderRadius:6,
-  cursor:"pointer"
+  borderRadius:6
+}
+
+const historyWrapper={
+  display:"flex",
+  flexDirection:"column",
+  gap:12,
+  height:"80vh"
+}
+
+const historyHeader={
+  position:"sticky",
+  top:0,
+  zIndex:2,
+  background:"white",
+  paddingBottom:10,
+  boxShadow:"0 2px 6px rgba(0,0,0,0.05)"
 }
 
 const filterBox={
   display:"flex",
   gap:10,
   alignItems:"center",
-  marginBottom:12,
   flexWrap:"wrap"
 }
 
@@ -336,8 +354,15 @@ const summaryCard={
   color:"white",
   padding:15,
   borderRadius:8,
-  marginBottom:15,
-  fontWeight:600
+  fontWeight:600,
+  marginTop:10
+}
+
+const tableScroll={
+  flex:1,
+  overflow:"auto",
+  border:"1px solid #e2e8f0",
+  borderRadius:8
 }
 
 const table={
