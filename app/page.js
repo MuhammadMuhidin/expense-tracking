@@ -18,12 +18,14 @@ export default function Page(){
 
   const [month,setMonth] = useState(defaultMonth)
 
+  const today = new Date().toISOString().slice(0,10)
+  
   const emptyForm={
     name:"",
     amount:"",
     category:"category",
     source:"source of funds",
-    date:"transaction date"
+    date:today
   }
 
   const [form,setForm] = useState(emptyForm)
