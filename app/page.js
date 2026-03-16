@@ -13,19 +13,23 @@ export default function Page(){
   const [loading,setLoading] = useState(false)
   const [saving,setSaving] = useState(false)
 
+  const [notif,setNotif] = useState({
+    show:false,
+    type:"",
+    text:""
+  })
+
   const now = new Date()
   const defaultMonth = now.toISOString().slice(0,7)
 
   const [month,setMonth] = useState(defaultMonth)
 
-  const today = new Date().toISOString().slice(0,10)
-  
   const emptyForm={
     name:"",
     amount:"",
     category:"",
     source:"",
-    date:today
+    date:""
   }
 
   const [form,setForm] = useState(emptyForm)
@@ -62,24 +66,47 @@ export default function Page(){
 
     setSaving(true)
 
-    await fetch("/api/expense",{
-      method:"POST",
-      headers:{
-        "Content-Type":"application/json"
-      },
-      body:JSON.stringify({
-        ...form,
-        user
+    try{
+
+      const res = await fetch("/api/expense",{
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json"
+        },
+        body:JSON.stringify({
+          ...form,
+          user
+        })
       })
-    })
+
+      if(!res.ok) throw new Error()
+
+      setNotif({
+        show:true,
+        type:"success",
+        text:"Data berhasil disimpan"
+      })
+
+      setForm(emptyForm)
+
+      loadData(user)
+
+    }catch{
+
+      setNotif({
+        show:true,
+        type:"error",
+        text:"Gagal menyimpan data"
+      })
+
+    }
 
     setSaving(false)
 
-    alert("Data berhasil disimpan")
+    setTimeout(()=>{
+      setNotif({show:false,type:"",text:""})
+    },3000)
 
-    setForm(emptyForm)
-
-    loadData(user)
   }
 
   const filteredData = data
@@ -96,6 +123,28 @@ export default function Page(){
   return(
 
     <div style={page}>
+
+      {notif.show && (
+        <div style={{
+          position:"fixed",
+          top:20,
+          left:"50%",
+          transform:"translateX(-50%)",
+          padding:"12px 18px",
+          borderRadius:8,
+          color:"white",
+          fontWeight:500,
+          background:
+            notif.type==="success"
+            ? "#16a34a"
+            : "#dc2626",
+          boxShadow:"0 8px 20px rgba(0,0,0,0.15)",
+          zIndex:999,
+          transition:"all .25s ease"
+        }}>
+          {notif.text}
+        </div>
+      )}
 
       <div style={{
         ...card,
@@ -152,7 +201,9 @@ export default function Page(){
               value={form.category}
               onChange={e=>setForm({...form,category:e.target.value})}
             >
-              <option value="" disabled hidden>Category</option>
+              <option value="" disabled hidden>
+                Category
+              </option>
               <option value="food">Food</option>
               <option value="drink">Drink</option>
               <option value="utilities">Utilities</option>
@@ -166,7 +217,9 @@ export default function Page(){
               value={form.source}
               onChange={e=>setForm({...form,source:e.target.value})}
             >
-              <option value="" disabled hidden>Source of Funds</option>
+              <option value="" disabled hidden>
+                Source of funds
+              </option>
               <option value="cash">Cash</option>
               <option value="transfer">Transfer</option>
               <option value="other">Other</option>
