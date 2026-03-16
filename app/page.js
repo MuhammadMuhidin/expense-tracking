@@ -223,9 +223,9 @@ export default function Page(){
               <option value="" disabled hidden>
                 Source of funds
               </option>
-              <option value="cash">BCA</option>
-              <option value="transfer">Krom</option>
-              <option value="transfer">Shopeepay</option>
+              <option value="bca">BCA</option>
+              <option value="krom">Krom</option>
+              <option value="shopeepay">Shopeepay</option>
               <option value="other">Other</option>
             </select>
 
