@@ -95,7 +95,10 @@ export default function Page(){
 
     <div style={page}>
 
-      <div style={card}>
+      <div style={{
+        ...card,
+        ...(tab==="history" ? cardHistory : cardInput)
+      }}>
 
         <div style={header}>
           <h2 style={{margin:0}}>Expense Tracker</h2>
@@ -184,32 +187,32 @@ export default function Page(){
 
           <div style={historyWrapper}>
 
-            <div style={historyHeader}>
+            <div style={tableScroll}>
 
-              <div style={filterBox}>
-                <div>Filter bulan</div>
+              <div style={historyHeader}>
 
-                <input
-                  type="month"
-                  value={month}
-                  onChange={e=>setMonth(e.target.value)}
-                  style={input}
-                />
+                <div style={filterBox}>
+                  <div>Filter bulan</div>
+
+                  <input
+                    type="month"
+                    value={month}
+                    onChange={e=>setMonth(e.target.value)}
+                    style={input}
+                  />
+                </div>
+
+                <div style={summaryCard}>
+                  Total : Rp {total.toLocaleString()}
+                </div>
+
               </div>
 
-              <div style={summaryCard}>
-                Total : Rp {total.toLocaleString()}
-              </div>
+              {loading && (
+                <div style={loadingStyle}>Loading...</div>
+              )}
 
-            </div>
-
-            {loading && (
-              <div style={loadingStyle}>Loading...</div>
-            )}
-
-            {!loading && (
-
-              <div style={tableScroll}>
+              {!loading && (
 
                 <table style={table}>
 
@@ -239,9 +242,9 @@ export default function Page(){
 
                 </table>
 
-              </div>
+              )}
 
-            )}
+            </div>
 
           </div>
 
@@ -254,7 +257,7 @@ export default function Page(){
 }
 
 const page={
-  minHeight:"100vh",
+  height:"100vh",
   background:"#f1f5f9",
   display:"flex",
   justifyContent:"center",
@@ -273,6 +276,14 @@ const card={
   boxSizing:"border-box",
   display:"flex",
   flexDirection:"column"
+}
+
+const cardInput={
+  height:"auto"
+}
+
+const cardHistory={
+  height:"100%"
 }
 
 const header={
@@ -327,10 +338,17 @@ const saveBtn={
 }
 
 const historyWrapper={
+  flex:1,
   display:"flex",
-  flexDirection:"column",
-  gap:12,
-  height:"80vh"
+  flexDirection:"column"
+}
+
+const tableScroll={
+  flex:1,
+  overflow:"auto",
+  border:"1px solid #e2e8f0",
+  borderRadius:8,
+  position:"relative"
 }
 
 const historyHeader={
@@ -338,7 +356,7 @@ const historyHeader={
   top:0,
   zIndex:2,
   background:"white",
-  paddingBottom:10,
+  padding:"10px",
   boxShadow:"0 2px 6px rgba(0,0,0,0.05)"
 }
 
@@ -352,17 +370,10 @@ const filterBox={
 const summaryCard={
   background:"#2563eb",
   color:"white",
-  padding:15,
+  padding:12,
   borderRadius:8,
   fontWeight:600,
   marginTop:10
-}
-
-const tableScroll={
-  flex:1,
-  overflow:"auto",
-  border:"1px solid #e2e8f0",
-  borderRadius:8
 }
 
 const table={
