@@ -256,28 +256,32 @@ const page={
   background:"#f1f5f9",
   display:"flex",
   justifyContent:"center",
-  padding:20
+  padding:"16px",
+  boxSizing:"border-box"
 }
 
 const card={
   width:"100%",
-  maxWidth:800,
+  maxWidth:720,
   background:"white",
-  padding:25,
+  padding:"20px",
   borderRadius:12,
-  boxShadow:"0 15px 40px rgba(0,0,0,0.08)"
+  boxShadow:"0 10px 30px rgba(0,0,0,0.08)",
+  boxSizing:"border-box"
 }
 
 const header={
   display:"flex",
   justifyContent:"space-between",
+  alignItems:"center",
   marginBottom:20
 }
 
 const tabs={
   display:"flex",
   gap:10,
-  marginBottom:20
+  marginBottom:20,
+  flexWrap:"wrap"
 }
 
 const tabBtn={
@@ -303,9 +307,11 @@ const formStyle={
 }
 
 const input={
+  width:"100%",
   padding:"10px",
   border:"1px solid #e2e8f0",
-  borderRadius:6
+  borderRadius:6,
+  boxSizing:"border-box"
 }
 
 const saveBtn={
@@ -313,14 +319,16 @@ const saveBtn={
   background:"#2563eb",
   color:"white",
   border:"none",
-  borderRadius:6
+  borderRadius:6,
+  cursor:"pointer"
 }
 
 const filterBox={
   display:"flex",
-  justifyContent:"space-between",
+  gap:10,
   alignItems:"center",
-  marginBottom:10
+  marginBottom:12,
+  flexWrap:"wrap"
 }
 
 const summaryCard={
@@ -334,7 +342,8 @@ const summaryCard={
 
 const table={
   width:"100%",
-  borderCollapse:"collapse"
+  borderCollapse:"collapse",
+  minWidth:600
 }
 
 const th={
