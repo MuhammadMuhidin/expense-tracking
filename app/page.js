@@ -257,11 +257,11 @@ export default function Page(){
 }
 
 const page={
-  height:"100vh",
+  height:"100dvh",
   background:"#f1f5f9",
   display:"flex",
   justifyContent:"center",
-  padding:"16px",
+  padding:"8px",
   boxSizing:"border-box",
   overflow:"hidden"
 }
@@ -270,16 +270,18 @@ const card={
   width:"100%",
   maxWidth:720,
   background:"white",
-  padding:"20px",
-  borderRadius:12,
-  boxShadow:"0 10px 30px rgba(0,0,0,0.08)",
+  padding:"16px",
+  borderRadius:10,
+  boxShadow:"0 6px 20px rgba(0,0,0,0.06)",
   boxSizing:"border-box",
   display:"flex",
-  flexDirection:"column"
+  flexDirection:"column",
+  maxHeight:"100%",
+  overflow:"auto"
 }
 
 const cardInput={
-  height:"auto"
+  height:"fit-content"
 }
 
 const cardHistory={
@@ -290,13 +292,13 @@ const header={
   display:"flex",
   justifyContent:"space-between",
   alignItems:"center",
-  marginBottom:20
+  marginBottom:16
 }
 
 const tabs={
   display:"flex",
   gap:10,
-  marginBottom:20
+  marginBottom:16
 }
 
 const tabBtn={
