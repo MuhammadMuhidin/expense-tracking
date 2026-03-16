@@ -23,8 +23,8 @@ export default function Page(){
   const emptyForm={
     name:"",
     amount:"",
-    category:"category",
-    source:"source of funds",
+    category:"",
+    source:"",
     date:today
   }
 
@@ -152,6 +152,7 @@ export default function Page(){
               value={form.category}
               onChange={e=>setForm({...form,category:e.target.value})}
             >
+              <option value="" disabled hidden>Category</option>
               <option value="food">Food</option>
               <option value="drink">Drink</option>
               <option value="utilities">Utilities</option>
@@ -165,6 +166,7 @@ export default function Page(){
               value={form.source}
               onChange={e=>setForm({...form,source:e.target.value})}
             >
+              <option value="" disabled hidden>Source of Funds</option>
               <option value="cash">Cash</option>
               <option value="transfer">Transfer</option>
               <option value="other">Other</option>
