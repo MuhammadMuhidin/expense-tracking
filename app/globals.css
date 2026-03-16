@@ -1,0 +1,9 @@
+html{
+  background:#f1f5f9;
+}
+
+@media (prefers-color-scheme: dark){
+  html{
+    filter: invert(1) hue-rotate(180deg);
+  }
+}

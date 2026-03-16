@@ -1,23 +1,32 @@
+import { NextResponse } from "next/server";
+
 export async function POST(req){
 
-  const { name,password } = await req.json()
+  const { user,password } = await req.json()
 
   const users = process.env.APP_USERS.split(",")
 
   const valid = users.find(u=>{
     const [n,p] = u.split(":")
-    return n===name && p===password
+    return n===user && p===password
   })
 
   if(!valid){
-    return Response.json({
+    return NextResponse.json({
       success:false,
       message:"Login failed"
     })
   }
 
-  return Response.json({
+  const res = NextResponse.json({
     success:true,
-    user:name
+    user:user
   })
+
+  res.cookies.set("user", user, {
+    httpOnly:true,
+    path:"/"
+  })
+
+  return res
 }

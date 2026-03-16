@@ -10,14 +10,23 @@ export default function Page(){
   const [user,setUser] = useState("")
   const [tab,setTab] = useState("input")
   const [data,setData] = useState([])
+  const [loading,setLoading] = useState(false)
+  const [saving,setSaving] = useState(false)
 
-  const [form,setForm] = useState({
+  const now = new Date()
+  const defaultMonth = now.toISOString().slice(0,7)
+
+  const [month,setMonth] = useState(defaultMonth)
+
+  const emptyForm={
     name:"",
     amount:"",
-    category:"",
-    source:"",
+    category:"food",
+    source:"cash",
     date:""
-  })
+  }
+
+  const [form,setForm] = useState(emptyForm)
 
   useEffect(()=>{
 
@@ -35,15 +44,21 @@ export default function Page(){
 
   async function loadData(u){
 
+    setLoading(true)
+
     const res = await fetch("/api/expense?user="+u)
     const json = await res.json()
 
     setData(json)
+
+    setLoading(false)
   }
 
   async function submit(e){
 
     e.preventDefault()
+
+    setSaving(true)
 
     await fetch("/api/expense",{
       method:"POST",
@@ -56,100 +71,287 @@ export default function Page(){
       })
     })
 
+    setSaving(false)
+
+    alert("Data berhasil disimpan")
+
+    setForm(emptyForm)
+
     loadData(user)
-    setTab("history")
   }
 
-  function logout(){
+  const filteredData = data.filter(r=>{
+    if(!r.date) return false
+    return r.date.startsWith(month)
+  })
 
-    localStorage.removeItem("user")
-    router.push("/login")
-  }
+  const total = filteredData.reduce((sum,r)=>{
+    return sum + Number(r.amount)
+  },0)
 
   return(
 
-    <div style={{padding:20}}>
+    <div style={page}>
 
-      <div style={{display:"flex",justifyContent:"space-between"}}>
-        <h3>User: {user}</h3>
-        <button onClick={logout}>Logout</button>
+      <div style={card}>
+
+        <div style={header}>
+          <h2 style={{margin:0}}>Expense Tracker</h2>
+          <div style={{color:"#64748b"}}>{user}</div>
+        </div>
+
+        <div style={tabs}>
+
+          <button
+            style={tab==="input"?activeTab:tabBtn}
+            onClick={()=>setTab("input")}
+          >
+            Input
+          </button>
+
+          <button
+            style={tab==="history"?activeTab:tabBtn}
+            onClick={()=>{
+              setTab("history")
+              loadData(user)
+            }}
+          >
+            History
+          </button>
+
+        </div>
+
+        {tab==="input" && (
+
+          <form onSubmit={submit} style={formStyle}>
+
+            <input
+              style={input}
+              placeholder="Name"
+              value={form.name}
+              onChange={e=>setForm({...form,name:e.target.value})}
+            />
+
+            <input
+              style={input}
+              type="number"
+              placeholder="Amount"
+              value={form.amount}
+              onChange={e=>setForm({...form,amount:e.target.value})}
+            />
+
+            <select
+              style={input}
+              value={form.category}
+              onChange={e=>setForm({...form,category:e.target.value})}
+            >
+              <option value="food">Food</option>
+              <option value="drink">Drink</option>
+              <option value="utilities">Utilities</option>
+              <option value="transport">Transport</option>
+              <option value="shopping">Shopping</option>
+              <option value="other">Other</option>
+            </select>
+
+            <select
+              style={input}
+              value={form.source}
+              onChange={e=>setForm({...form,source:e.target.value})}
+            >
+              <option value="cash">Cash</option>
+              <option value="transfer">Transfer</option>
+              <option value="other">Other</option>
+            </select>
+
+            <input
+              style={input}
+              type="date"
+              value={form.date}
+              onChange={e=>setForm({...form,date:e.target.value})}
+            />
+
+            <button disabled={saving} style={saveBtn}>
+              {saving ? "Saving..." : "Simpan"}
+            </button>
+
+          </form>
+
+        )}
+
+        {tab==="history" && (
+
+          <div>
+
+            <div style={filterBox}>
+
+              <div>
+                Filter bulan
+              </div>
+
+              <input
+                type="month"
+                value={month}
+                onChange={e=>setMonth(e.target.value)}
+                style={input}
+              />
+
+            </div>
+
+            <div style={summaryCard}>
+              Total : Rp {total.toLocaleString()}
+            </div>
+
+            {loading && (
+              <div style={loadingStyle}>Loading...</div>
+            )}
+
+            {!loading && (
+
+              <div style={{overflowX:"auto"}}>
+
+                <table style={table}>
+
+                  <thead>
+                    <tr>
+                      <th style={th}>Name</th>
+                      <th style={th}>Amount</th>
+                      <th style={th}>Category</th>
+                      <th style={th}>Source</th>
+                      <th style={th}>Date</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+
+                    {filteredData.map((r,i)=>(
+                      <tr key={i} style={tr}>
+                        <td style={td}>{r.name}</td>
+                        <td style={td}>Rp {Number(r.amount).toLocaleString()}</td>
+                        <td style={td}>{r.category}</td>
+                        <td style={td}>{r.source}</td>
+                        <td style={td}>{r.date}</td>
+                      </tr>
+                    ))}
+
+                  </tbody>
+
+                </table>
+
+              </div>
+
+            )}
+
+          </div>
+
+        )}
+
       </div>
-
-      <br/>
-
-      <button onClick={()=>setTab("input")}>Input</button>
-      <button onClick={()=>setTab("history")}>History</button>
-
-      <hr/>
-
-      {tab==="input" && (
-
-        <form onSubmit={submit}>
-
-          <input
-            placeholder="name"
-            onChange={e=>setForm({...form,name:e.target.value})}
-          />
-
-          <input
-            type="number"
-            placeholder="amount"
-            onChange={e=>setForm({...form,amount:e.target.value})}
-          />
-
-          <input
-            placeholder="category"
-            onChange={e=>setForm({...form,category:e.target.value})}
-          />
-
-          <input
-            placeholder="source Dana"
-            onChange={e=>setForm({...form,source:e.target.value})}
-          />
-
-          <input
-            type="date"
-            onChange={e=>setForm({...form,date:e.target.value})}
-          />
-
-          <button type="submit">Simpan</button>
-
-        </form>
-
-      )}
-
-      {tab==="history" && (
-
-        <table border="1">
-
-          <thead>
-            <tr>
-              <th>name</th>
-              <th>amount</th>
-              <th>category</th>
-              <th>source</th>
-              <th>date</th>
-            </tr>
-          </thead>
-
-          <tbody>
-
-            {data.map((r,i)=>(
-              <tr key={i}>
-                <td>{r.name}</td>
-                <td>{r.amount}</td>
-                <td>{r.category}</td>
-                <td>{r.source}</td>
-                <td>{r.date}</td>
-              </tr>
-            ))}
-
-          </tbody>
-
-        </table>
-
-      )}
 
     </div>
   )
+}
+
+const page={
+  minHeight:"100vh",
+  background:"#f1f5f9",
+  display:"flex",
+  justifyContent:"center",
+  padding:20
+}
+
+const card={
+  width:"100%",
+  maxWidth:800,
+  background:"white",
+  padding:25,
+  borderRadius:12,
+  boxShadow:"0 15px 40px rgba(0,0,0,0.08)"
+}
+
+const header={
+  display:"flex",
+  justifyContent:"space-between",
+  marginBottom:20
+}
+
+const tabs={
+  display:"flex",
+  gap:10,
+  marginBottom:20
+}
+
+const tabBtn={
+  padding:"8px 16px",
+  border:"none",
+  borderRadius:6,
+  background:"#e2e8f0",
+  cursor:"pointer"
+}
+
+const activeTab={
+  padding:"8px 16px",
+  border:"none",
+  borderRadius:6,
+  background:"#2563eb",
+  color:"white",
+  cursor:"pointer"
+}
+
+const formStyle={
+  display:"grid",
+  gap:12
+}
+
+const input={
+  padding:"10px",
+  border:"1px solid #e2e8f0",
+  borderRadius:6
+}
+
+const saveBtn={
+  padding:"10px",
+  background:"#2563eb",
+  color:"white",
+  border:"none",
+  borderRadius:6
+}
+
+const filterBox={
+  display:"flex",
+  justifyContent:"space-between",
+  alignItems:"center",
+  marginBottom:10
+}
+
+const summaryCard={
+  background:"#2563eb",
+  color:"white",
+  padding:15,
+  borderRadius:8,
+  marginBottom:15,
+  fontWeight:600
+}
+
+const table={
+  width:"100%",
+  borderCollapse:"collapse"
+}
+
+const th={
+  textAlign:"left",
+  padding:"10px",
+  background:"#f1f5f9"
+}
+
+const td={
+  padding:"10px"
+}
+
+const tr={
+  borderTop:"1px solid #e2e8f0"
+}
+
+const loadingStyle={
+  padding:20,
+  textAlign:"center"
 }

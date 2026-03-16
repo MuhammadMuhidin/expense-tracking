@@ -1,10 +1,15 @@
 import { NextResponse } from "next/server";
 
 export function middleware(request) {
-  const token = request.cookies.get("admin")?.value;
+
+  const token = request.cookies.get("user")?.value;
   const { pathname } = request.nextUrl;
 
-  /* LOGIN PAGE */
+  /* SKIP API */
+  if (pathname.startsWith("/api")) {
+    return NextResponse.next();
+  }
+
   if (pathname.startsWith("/login")) {
     if (token) {
       return NextResponse.redirect(new URL("/", request.url));
@@ -12,17 +17,13 @@ export function middleware(request) {
     return NextResponse.next();
   }
 
-  /* ADMIN PAGE */
-  if (pathname.startsWith("/")) {
-    if (!token) {
-      return NextResponse.redirect(new URL("/login", request.url));
-    }
-    return NextResponse.next();
+  if (!token) {
+    return NextResponse.redirect(new URL("/login", request.url));
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/:path*", "/login"]
+  matcher: ["/((?!api|_next).*)"]
 };
