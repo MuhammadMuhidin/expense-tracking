@@ -21,8 +21,8 @@ export default function Page(){
   const emptyForm={
     name:"",
     amount:"",
-    category:"food",
-    source:"cash",
+    category:"category",
+    source:"source of funds",
     date:""
   }
 
