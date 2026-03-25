@@ -206,12 +206,11 @@ export default function Page(){
               <option value="" disabled hidden>
                 Category
               </option>
-              <option value="food">Food</option>
-              <option value="drink">Drink</option>
+              <option value="eatery">Eatery</option>
               <option value="utilities">Utilities</option>
               <option value="shopping">Shopping</option>
-              <option value="billing">Billing</option>
               <option value="installment">Installment</option>
+              <option value="billing">Billing</option>
               <option value="other">Other</option>
             </select>
 
